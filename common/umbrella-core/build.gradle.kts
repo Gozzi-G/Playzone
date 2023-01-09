@@ -1,5 +1,5 @@
 plugins {
-    id("multiplatform-compose-setup")
+    id("multiplatform-setup")
     id("android-setup")
 }
 
@@ -11,7 +11,10 @@ kotlin {
                 implementation(project(":common:auth:data"))
                 implementation(project(":common:games:data"))
                 implementation(project(":common:tournaments:data"))
+
+                implementation(Dependencies.Kodein.core)
             }
         }
     }
 }
+

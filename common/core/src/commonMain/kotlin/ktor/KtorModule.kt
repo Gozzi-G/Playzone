@@ -5,6 +5,7 @@ import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.kodein.di.DI
@@ -27,6 +28,16 @@ internal val ktorModule = DI.Module("ktorModule") {
                     ignoreUnknownKeys = true
                     prettyPrint = true
                 })
+            }
+
+            install(HttpTimeout) {
+                connectTimeoutMillis = 15000
+                requestTimeoutMillis = 30000
+            }
+
+            defaultRequest {
+                header("Content-Type", "application/json; charset=UTF-8")
+                url("https://playzone-backend.herokuapp.com/")
             }
 
 

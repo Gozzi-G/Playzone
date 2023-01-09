@@ -1,5 +1,6 @@
 package com.example.playzone.android
 
+import GamesRepository
 import TestClass
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,6 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import di.Inject.instance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun MyApplicationTheme(
@@ -58,17 +64,18 @@ fun MyApplicationTheme(
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
 
-            Text(text = TestClass().testHello())
-//            MyApplicationTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-//                }
-//            }
+        val gamesRepository = instance<GamesRepository>()
+
+        CoroutineScope(context = Dispatchers.IO).launch {
+            val game = gamesRepository.fetchAllGames()
+            withContext(Dispatchers.Main) {
+                setContent {
+                    Text(text = "Title: ${game.first().title}")
+                }
+            }
         }
+
     }
 }
 
